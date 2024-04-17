@@ -40,10 +40,11 @@ from flask import Flask
 from flask.cli import ScriptInfo
 from flask_assets import assets
 from flask_babelex import Babel
+from invenio_accounts import InvenioAccounts
 from invenio_assets import InvenioAssets
 from invenio_assets.cli import collect, npm
-from invenio_db import db as db_
 from invenio_db import InvenioDB
+from invenio_db import db as db_
 from invenio_files_rest import InvenioFilesREST
 from invenio_files_rest.models import Bucket, Location, ObjectVersion
 from invenio_pidstore.providers.recordid import RecordIdProvider
@@ -66,9 +67,11 @@ def app():
         'testapp', static_folder=instance_path, instance_path=instance_path)
     app_.config.update(
         TESTING=True,
-        SQLALCHEMY_DATABASE_URI=os.environ.get(
-            'SQLALCHEMY_DATABASE_URI',
-            'sqlite:///:memory:'),
+        # SQLALCHEMY_DATABASE_URI=os.environ.get(
+        #     'SQLALCHEMY_DATABASE_URI',
+        #     'sqlite:///:memory:'),
+        SQLALCHEMY_DATABASE_URI=os.getenv('SQLALCHEMY_DATABASE_URI',
+                                          'postgresql+psycopg2://invenio:dbpass123@postgresql:5432/wekotest'),
         SQLALCHEMY_TRACK_MODIFICATIONS=True,
         RECORDS_UI_DEFAULT_PERMISSION_FACTORY=None,
         RECORDS_UI_ENDPOINTS=dict(
@@ -99,12 +102,13 @@ def app():
     previewer = InvenioPreviewer(app_)._state
     InvenioRecordsUI(app_)
     InvenioFilesREST(app_)
+    InvenioAccounts(app_)
 
     # Add base assets bundles for jQuery and Bootstrap
     # Note: These bundles aren't included by default since package consumers
     # should handle assets and their dependencies manually.
-    assets_ext.env.register(previewer.js_bundles[0], previewer_base_js)
-    assets_ext.env.register(previewer.css_bundles[0], previewer_base_css)
+    # assets_ext.env.register(previewer.js_bundles[0], previewer_base_js)
+    # assets_ext.env.register(previewer.css_bundles[0], previewer_base_css)
 
     with app_.app_context():
         yield app_

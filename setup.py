@@ -34,17 +34,14 @@ readme = open('README.rst').read()
 history = open('CHANGES.rst').read()
 
 tests_require = [
-    'check-manifest>=0.25',
-    'coverage>=4.0',
-    'invenio-db[versioning]>=1.0.0b3',
-    'invenio-records-files>=1.0.0a3',
-    'isort>=4.2.2',
-    'mock>=1.3.0',
-    'pydocstyle>=1.0.0',
-    'pytest-cache>=1.0',
-    'pytest-cov>=1.8.0',
-    'pytest-pep8>=1.0.6',
-    'pytest>=2.8.0',
+    'coverage>=4.5.3,<5.0.0',
+    'mock>=3.0.0,<4.0.0',
+    'pytest>=4.6.4,<5.0.0',
+    'pytest-cache',
+    'pytest-cov',
+    'pytest-pep8',
+    'pytest-invenio',
+    'responses',
 ]
 
 extras_require = {
@@ -64,7 +61,7 @@ for reqs in extras_require.values():
 
 setup_requires = [
     'Babel>=1.3',
-    'pytest-runner>=2.6.2',
+    'pytest-runner>=3.0.0,<5',
 ]
 
 install_requires = [
@@ -119,6 +116,8 @@ setup(
             '= invenio_previewer.bundles:prism_js',
             'previewer_prism_css '
             '= invenio_previewer.bundles:prism_css',
+            'previewer_threejs '
+            '= invenio_previewer.bundles:threejs',
         ],
         'invenio_previewer.previewers': [
             'csv_dthreejs = invenio_previewer.extensions.csv_dthreejs',
@@ -130,6 +129,9 @@ setup(
             'zip = invenio_previewer.extensions.zip',
             'ipynb = invenio_previewer.extensions.ipynb',
             'default = invenio_previewer.extensions.default',
+            'iiif_presentation = invenio_previewer.extensions.iiif_presentation',
+	    'threejs = invenio_previewer.extensions.threejs',
+
         ],
     },
     extras_require=extras_require,

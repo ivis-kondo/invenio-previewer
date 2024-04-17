@@ -56,15 +56,15 @@ def validate_xml(file):
             content = fp.read().decode('utf-8')
             xml.dom.minidom.parseString(content)
             return True
-        except:
+        except BaseException:
             return False
 
 
 def can_preview(file):
     """Determine if the given file can be previewed."""
-    return (file.is_local() and
-            file.has_extensions('.xml') and
-            validate_xml(file))
+    return (file.is_local()
+            and file.has_extensions('.xml')
+            and validate_xml(file))
 
 
 def preview(file):

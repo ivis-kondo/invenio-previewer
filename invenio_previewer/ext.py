@@ -26,6 +26,8 @@
 
 from __future__ import absolute_import, print_function
 
+from time import sleep
+
 import pkg_resources
 import six
 from flask import current_app
@@ -61,6 +63,7 @@ class _InvenioPreviewerState(object):
         self.entry_point_group = entry_point_group
         self.previewers = {}
         self._previewable_extensions = set()
+        self.processed = False
 
     @cached_property
     def previewable_extensions(self):
@@ -111,6 +114,9 @@ class _InvenioPreviewerState(object):
 
     def iter_previewers(self, previewers=None):
         """Get previewers ordered by PREVIEWER_PREVIEWERS_ORDER."""
+        while self.processed:
+            sleep(1)
+        self.processed = True
         if self.entry_point_group is not None:
             self.load_entry_point_group(self.entry_point_group)
             self.entry_point_group = None
@@ -118,6 +124,7 @@ class _InvenioPreviewerState(object):
         previewers = previewers or \
             self.app.config.get('PREVIEWER_PREFERENCE', [])
 
+        self.processed = False
         for item in previewers:
             if item in self.previewers:
                 yield self.previewers[item]

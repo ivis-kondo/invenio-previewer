@@ -56,15 +56,15 @@ def validate_json(file):
         try:
             json.loads(fp.read().decode('utf-8'))
             return True
-        except:
+        except BaseException:
             return False
 
 
 def can_preview(file):
     """Determine if the given file can be previewed."""
-    return (file.is_local() and
-            file.has_extensions('.json') and
-            validate_json(file))
+    return (file.is_local()
+            and file.has_extensions('.json')
+            and validate_json(file))
 
 
 def preview(file):
